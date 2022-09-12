@@ -19,9 +19,9 @@ class Dat:
         corresponding header_file (ex: 00.hea)"""
         self.path = path
         self.file_name = str(self.path).split(".")[0]
-        self.start_time, self.end_time, self.frequency = self.parse()
+        self.start_time, self.end_time, self.hrs, self.sig_len, self.frequency = self.parse()
 
-    def parse(self) -> Tuple[pd.Timestamp, pd.Timestamp, int]:
+    def parse(self) -> Tuple[pd.Timestamp, pd.Timestamp, float, int, int]:
         _, info_dict = wfdb.rdsamp(self.file_name)
         frequency = info_dict["fs"]
         sig_len = info_dict["sig_len"]
@@ -32,7 +32,7 @@ class Dat:
         start_time = pd.to_datetime(f"{year}-{month}-{day} {hr}:{min}:{sec}")
         hrs = sig_len / (frequency * 60 * 60)
         end_time = start_time + pd.Timedelta(hours=hrs)
-        return start_time, end_time, frequency
+        return start_time, end_time, hrs, sig_len, frequency
 
     def read(self) -> np.ndarray:
         """Return wave data"""

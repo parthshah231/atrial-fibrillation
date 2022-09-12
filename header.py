@@ -36,15 +36,16 @@ class Header:
     def __init__(self, path: Path) -> None:
         self.path = path
         self.file_name = str(self.path).split(".")[0]
-        self.freq, self.start_date, self.start_time, self.sig_len = self.parse()
+        self.freq, self.n_sig, self.start_date, self.start_time, self.sig_len = self.parse()
 
     def parse(self) -> Any:
         header = rdheader(self.file_name)
         frequency = header.fs
+        n_sig = header.n_sig
         start_date = header.base_date
         start_time = header.base_time
         sig_len = header.sig_len
-        return frequency, start_date, start_time, sig_len
+        return frequency, n_sig, start_date, start_time, sig_len
 
 
 if __name__ == "__main__":
